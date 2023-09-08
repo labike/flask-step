@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title%}{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename = 'css/index.css') }}">
+  <script src="{{ url_for('static', filename = 'js/index.js') }}"></script>
+  <style>
+    .mid {
+      clear: both;
+    }
+  </style>
+</head>
+<body>
+  {% set name = 'ohayo' %}
+  {% include('common/header.html') %}
+  <div class="mid">
+    {% block body_block %}
+    <p>base page</p>
+    {% endblock %}
+  </div>
+  {% include('common/footer.html') %}
+
+  {% with %}
+  {% set room = '123' %}
+  <span>{{ room }}</span>
+  {% endwith %}
+  <h2>{{ room }}</h2>
+</body>
+</html>
