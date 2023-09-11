@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{% endblock %}</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      text-decoration: none;
+    }
+    .container{
+      width: 375px;
+      height: 600px;
+      background-color: #fff;
+    }
+    .search-group {
+      padding: 14px 8px;
+      background-color: aqua;
+    }
+    .search-input {
+      background-color: #fff;
+      display: block;
+      width: 100%;
+      height: 30px;
+      border-radius: 5px;
+      outline: none;
+      border: none;
+    }
+    .item-list-group {
+      overflow: hidden;
+      padding: 10px;
+    }
+    .module-title {
+      float: left;
+    }
+    .more-btn {
+      float: right;
+    }
+    .list-group {
+      overflow: hidden;
+      padding: 0 10px;
+    }
+    .item-group {
+      float: left;
+      margin-right: 10px;
+    }
+    .thumbling {
+      display: block;
+      width: 100px;
+    }
+    .item-title {
+      font-size: 12px;
+    }
+    .item-rate {
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="search-group">
+      <input type="text" class="search-input" placeholder="搜索" />
+    </div>
+    {% block body %}
+    {% endblock %}
+  </div>
+</body>
+</html>

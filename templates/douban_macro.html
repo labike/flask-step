@@ -1,0 +1,41 @@
+{% macro itemGroup(thumling, title, rating) %}
+<div class="item-group">
+  <img src="{{ thumling }}" alt="" class="thumbling">
+  <p class="item-title">{{ title }}</p>
+  <p class="item-rate">
+    {% set lights = ((rating | int) / 2) | int %}
+    {% set halfs = (rating | int) % 2 %}
+    {% set grays = 5 - lights - halfs %}
+
+    {% for light in range(0, lights) %}
+    <img src="{{ url_for('static', filename = '') }}" alt="">
+    {% endfor %}
+
+    {% for half in range(0, halfs) %}
+    <img src="{{ url_for('static', filename = '') }}" alt="">
+    {% endfor %}
+
+    {% for gray in range(0, grays) %}
+    <img src="{{ url_for('static', filename = '') }}" alt="">
+    {% endfor %}
+
+    {{ rating }}
+  </p>
+</div>
+{% endmacro %}
+
+{% macro listGroup(module_title, items, category=category) %}
+<div class="item-list-group">
+  <div class="item-list-top">
+    <span class="module-title">
+      {{ module_title }}
+    </span>
+    <a href="{{ url_for('douban_list', category=category) }}" class="more-btn">更多</a>
+  </div>
+  <div class="list-group">
+    {% for item in items[0:3] %}
+      {{ itemGroup(item.thumling, item.title, item.rating) }}
+    {% endfor %}
+  </div>
+</div>
+{% endmacro %}

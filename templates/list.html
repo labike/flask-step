@@ -1,0 +1,8 @@
+{% extends 'basic.html' %}
+{% from 'douban_macro.html' import itemGroup, listGroup %}
+
+{% block body %}
+  {% for item in items %}
+  {{ itemGroup(item.thumling, item.title, item.rating) }}
+  {% endfor %}
+{% endblock %}
