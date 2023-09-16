@@ -1,7 +1,14 @@
 from datetime import datetime
-from flask import Flask, request, render_template, redirect, url_for, Response, jsonify
+from flask import Flask, request, render_template, redirect, typing as ft, url_for, Response, jsonify, views, blueprints
 import config
 from werkzeug.routing import BaseConverter
+from functools import wraps
+
+# 导入blueprint
+from blueprints.users import users_bp
+# from blueprints.movies import movies_bp
+# from blueprints.books import books_bp
+from blueprints.news import news_bp
 
 movies = [
     {
@@ -27,6 +34,8 @@ tvs = [
 app = Flask(__name__)
 # app.config.from_object(config)
 app.config.from_pyfile('config.py', silent=True)
+app.register_blueprint(users_bp)
+app.register_blueprint(news_bp)
 
 class TemplatePhoneConverter(BaseConverter):
     regex = r'1[583746]\d{9}'
@@ -156,6 +165,84 @@ def douban_list():
     else:
         items = tvs
     return render_template('list.html', items = items)
+
+# flask视图函数
+@app.route('/flask_view')
+def flask_view():
+    return 'flask view'
+
+def flask_view_list():
+    return 'flask view list'
+app.add_url_rule('/flask_view_list', endpoint = 'flask_view_list', view_func = flask_view_list)
+
+class JSONView(views.View):
+    def get_data(self):
+        raise NotImplementedError
+    
+    def dispatch_request(self):
+        return jsonify(self.get_data())
+    
+# 类视图
+class ListView(JSONView):
+    def get_data(self):
+        return {'username': 'biubiubiu', 'password': '123456'}
+app.add_url_rule('/class_list_view', endpoint='class_list_view', view_func=ListView.as_view('class_list_view'))
+
+
+class AdsView(views.View):
+    def __init__(self) -> None:
+        super(AdsView, self).__init__()
+        self.context = {
+            'ads': '今年过节不收礼'
+        }
+
+class LoginView(AdsView):
+    def dispatch_request(self):
+        return render_template('login.html', **self.context)
+    
+class RegisterView(AdsView):
+    def dispatch_request(self):
+        return render_template('register.html', **self.context)
+app.add_url_rule('/login_view', view_func=LoginView.as_view('login_view'))
+app.add_url_rule('/register_view', view_func=RegisterView.as_view('register_view'))
+
+# 基于调度的视图函数
+class LoginView2(views.MethodView):
+    def get(self):
+        return render_template('login.html')
+    
+    def post(self):
+        username = request.form.get('username')
+        password = request.form.get('password')
+        if username == 'koa' and password == 'koa':
+            return 'success'
+        else:
+            return 'failed'
+app.add_url_rule('/login2', view_func=LoginView2.as_view('login2'))
+
+# 视图函数装饰器
+def login_required(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        username = request.args.get('username')
+        if username == 'koa':
+            return func(*args, **kwargs)
+        else:
+            return '请登录'
+    return wrapper
+
+
+@app.route('/setting/')
+@login_required
+def setting():
+    return 'setting page'
+
+# 类视图中使用装饰器
+class ProfileView(views.View):
+    decorators = [login_required]
+    def dispatch_request(self):
+        return 'profile page'
+app.add_url_rule('/user_profile/', view_func=ProfileView.as_view('user_profile'))
 
 if __name__ == '__main__':
     app.run()

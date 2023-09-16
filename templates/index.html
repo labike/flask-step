@@ -4,4 +4,5 @@
 {% block body_block %}
 {{ super() }}
 <div style="background-color: #189ff0;">body content</div>
+<a href="{{ url_for('users.profile') }}">url_for反转</a>
 {% endblock %}

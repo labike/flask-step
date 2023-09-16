@@ -1,2 +1,3 @@
 DEBUG = True
 TEMPLATES_AUTO_RELOAD = True
+SERVER_NAME = 'admin'
